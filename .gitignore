@@ -1,0 +1,59 @@
+# Build outputs
+build/
+*.exe
+*.o
+*.obj
+*.dll
+*.so
+*.dylib
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Debug files
+*.pdb
+*.ilk
+*.exp
+*.lib
+
+# Log files
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Windows specific
+desktop.ini
+
+# Visual Studio
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.filters
+*.vcxproj.user
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile.cmake
+
+# Dependencies
+deps/
+vendor/
+packages/
+
+# Distribution
+dist/
+release/
