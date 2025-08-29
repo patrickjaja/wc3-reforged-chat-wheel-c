@@ -2,6 +2,8 @@
 
 A Dota 2-style chat wheel overlay for Warcraft 3 Reforged, allowing quick communication through predefined messages.
 
+![wc3-chat-wheel](wc3-chat-wheel.png)
+
 ## Features
 
 - **Quick Access**: Press `Ctrl+G` to activate the chat wheel
