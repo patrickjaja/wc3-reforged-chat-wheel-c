@@ -150,8 +150,8 @@ public:
             return;
         }
         
-        // Set transparency
-        SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 200, LWA_ALPHA);
+        // Set transparency - make black color fully transparent
+        SetLayeredWindowAttributes(hwnd, RGB(0, 0, 0), 0, LWA_COLORKEY);
     }
     
     void Show() {
@@ -230,7 +230,7 @@ public:
         HBITMAP memBitmap = CreateCompatibleBitmap(hdc, 400, 400);
         HBITMAP oldBitmap = (HBITMAP)SelectObject(memDC, memBitmap);
         
-        // Clear background
+        // Clear background with transparent color (black will be made transparent by LWA_COLORKEY)
         RECT rect = {0, 0, 400, 400};
         FillRect(memDC, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
         
