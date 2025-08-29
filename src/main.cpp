@@ -296,12 +296,12 @@ public:
         SetForegroundWindow(wc3Window);
         Sleep(50);
         
-        // Send Ctrl+Enter to open chat
+        // Send Shift+Enter to open "chat to all" textfield
         INPUT inputs[4] = {};
         
-        // Press Ctrl
+        // Press Shift
         inputs[0].type = INPUT_KEYBOARD;
-        inputs[0].ki.wVk = VK_CONTROL;
+        inputs[0].ki.wVk = VK_SHIFT;
         
         // Press Enter
         inputs[1].type = INPUT_KEYBOARD;
@@ -312,9 +312,9 @@ public:
         inputs[2].ki.wVk = VK_RETURN;
         inputs[2].ki.dwFlags = KEYEVENTF_KEYUP;
         
-        // Release Ctrl
+        // Release Shift
         inputs[3].type = INPUT_KEYBOARD;
-        inputs[3].ki.wVk = VK_CONTROL;
+        inputs[3].ki.wVk = VK_SHIFT;
         inputs[3].ki.dwFlags = KEYEVENTF_KEYUP;
         
         SendInput(4, inputs, sizeof(INPUT));
