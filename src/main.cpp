@@ -234,41 +234,90 @@ public:
         RECT rect = {0, 0, 400, 400};
         FillRect(memDC, &rect, (HBRUSH)GetStockObject(BLACK_BRUSH));
         
-        // GDI+ drawing
+        // GDI+ drawing - Warcraft 3 themed
         {
             Graphics graphics(memDC);
             graphics.SetSmoothingMode(SmoothingModeAntiAlias);
+            graphics.SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
             
             int numSegments = static_cast<int>(messages.size());
             float anglePerSegment = 360.0f / numSegments;
             
+            // Draw outer decorative ring (gold border)
+            Pen outerRingPen(Color(255, 180, 140, 50), 3.0f);
+            graphics.DrawEllipse(&outerRingPen, 45, 45, 310, 310);
+            
             for (int i = 0; i < numSegments; i++) {
                 float startAngle = i * anglePerSegment - 90;
                 
-                // Colors
-                Color fillColor = (i == selectedSegment) ?
-                    Color(200, 74, 158, 255) : Color(180, 42, 42, 42);
-                Color borderColor(255, 100, 100, 100);
+                // Warcraft 3 themed colors
+                Color fillColor;
+                if (i == selectedSegment) {
+                    // Golden glow for selected segment
+                    fillColor = Color(220, 255, 200, 50);
+                } else {
+                    // Dark stone/parchment color for unselected
+                    fillColor = Color(160, 35, 25, 20);
+                }
                 
-                // Draw segment
-                SolidBrush fillBrush(fillColor);
-                Pen borderPen(borderColor, 2.0f);
+                // Create gradient effect for depth
+                GraphicsPath path;
+                path.AddPie(50, 50, 300, 300, startAngle, anglePerSegment);
                 
-                graphics.FillPie(&fillBrush, 50, 50, 300, 300, startAngle, anglePerSegment);
+                // Draw segment with gradient
+                if (i == selectedSegment) {
+                    // Glowing golden gradient for selected
+                    LinearGradientBrush gradBrush(
+                        Point(200, 200),
+                        Point(200 + static_cast<int>(150 * cosf((startAngle + anglePerSegment/2) * 3.14159f / 180.0f)),
+                              200 + static_cast<int>(150 * sinf((startAngle + anglePerSegment/2) * 3.14159f / 180.0f))),
+                        Color(240, 255, 215, 80),
+                        Color(200, 200, 150, 30)
+                    );
+                    graphics.FillPath(&gradBrush, &path);
+                    
+                    // Golden border for selected
+                    Pen glowPen(Color(255, 255, 200, 100), 2.5f);
+                    graphics.DrawPie(&glowPen, 50, 50, 300, 300, startAngle, anglePerSegment);
+                } else {
+                    // Dark gradient for unselected
+                    SolidBrush darkBrush(fillColor);
+                    graphics.FillPath(&darkBrush, &path);
+                }
+                
+                // Bronze/gold borders
+                Pen borderPen(Color(255, 140, 100, 40), 1.5f);
                 graphics.DrawPie(&borderPen, 50, 50, 300, 300, startAngle, anglePerSegment);
                 
-                // Draw text
+                // Draw inner decorative lines
+                Pen innerLinePen(Color(180, 100, 70, 30), 1.0f);
+                graphics.DrawPie(&innerLinePen, 80, 80, 240, 240, startAngle, anglePerSegment);
+                
+                // Draw text with WC3 styling
                 float midAngle = (startAngle + anglePerSegment / 2) * 3.14159f / 180.0f;
                 int textX = 200 + static_cast<int>(wheelRadius * 0.6f * cosf(midAngle));
                 int textY = 200 + static_cast<int>(wheelRadius * 0.6f * sinf(midAngle));
                 
-                FontFamily fontFamily(L"Arial");
-                Font font(&fontFamily, 10, FontStyleBold, UnitPixel);
+                FontFamily fontFamily(L"Georgia");
+                Font font(&fontFamily, 11, FontStyleBold, UnitPixel);
                 StringFormat format;
                 format.SetAlignment(StringAlignmentCenter);
                 format.SetLineAlignment(StringAlignmentCenter);
                 
-                SolidBrush textBrush(Color(255, 255, 255, 255));
+                // Text color based on selection
+                Color textColor = (i == selectedSegment) ?
+                    Color(255, 255, 245, 200) :  // Bright gold for selected
+                    Color(255, 200, 170, 130);   // Muted gold for unselected
+                    
+                // Draw text shadow for depth
+                SolidBrush shadowBrush(Color(150, 0, 0, 0));
+                RectF shadowRect(static_cast<float>(textX - 49), 
+                               static_cast<float>(textY - 14), 100.0f, 30.0f);
+                graphics.DrawString(messages[i].c_str(), -1, &font,
+                                  shadowRect, &format, &shadowBrush);
+                
+                // Draw main text
+                SolidBrush textBrush(textColor);
                 RectF textRect(static_cast<float>(textX - 50), 
                              static_cast<float>(textY - 15), 100.0f, 30.0f);
                 
@@ -276,9 +325,27 @@ public:
                                   textRect, &format, &textBrush);
             }
             
-            // Center dead zone
-            SolidBrush centerBrush(Color(200, 20, 20, 20));
-            graphics.FillEllipse(&centerBrush, 170, 170, 60, 60);
+            // Center ornate design (WC3 style)
+            // Outer ring
+            LinearGradientBrush centerGradient(
+                Point(170, 170),
+                Point(230, 230),
+                Color(200, 60, 40, 25),
+                Color(200, 20, 15, 10)
+            );
+            graphics.FillEllipse(&centerGradient, 165, 165, 70, 70);
+            
+            // Gold ornate border
+            Pen centerBorderPen(Color(255, 160, 120, 50), 2.0f);
+            graphics.DrawEllipse(&centerBorderPen, 165, 165, 70, 70);
+            
+            // Inner circle
+            SolidBrush innerCenterBrush(Color(220, 15, 10, 8));
+            graphics.FillEllipse(&innerCenterBrush, 185, 185, 30, 30);
+            
+            // Small golden dot in center
+            SolidBrush centerDotBrush(Color(255, 200, 150, 60));
+            graphics.FillEllipse(&centerDotBrush, 197, 197, 6, 6);
         }
         
         // Blit to screen
